@@ -865,14 +865,24 @@ body {
 .placed-sticker {
     position: absolute;
     font-size: 2rem;
+    line-height: 1;
     user-select: none;
     pointer-events: none;
+    transform: translate(-50%, -50%);
     animation: stampSplat 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 20;
 }
 
 @keyframes stampSplat {
-    0% { transform: scale(2.5) rotate(-20deg); opacity: 0; }
-    100% { transform: scale(1) rotate(0); opacity: 1; }
+    0% {
+        transform: translate(-50%, -50%) scale(2.5) rotate(-20deg);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0);
+        opacity: 1;
+    }
 }
 
 /* ============================================================
