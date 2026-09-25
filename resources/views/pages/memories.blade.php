@@ -13,25 +13,49 @@
     <!-- Add New Memory Button -->
     <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
         <button type="button" id="btnOpenAddMemory" class="btn-sweet-primary" style="font-size: 0.88rem; padding: 8px 18px;">
-            <span>✨</span> Tambah Kenangan Baru
+            <span>+</span> Tambah Kenangan Baru
         </button>
     </div>
+    <br>
 
     <!-- Polaroid Grid -->
     <div class="polaroid-grid">
         @foreach ($memories as $p)
-            <div class="polaroid-card" data-id="{{ $p->id }}" data-title="{{ $p->title }}" data-caption="{{ $p->caption }}" data-sticker="{{ $p->sticker }}" data-date="{{ $p->date_label }}">
+            <div
+                class="polaroid-card"
+                data-id="{{ $p->id }}"
+                data-title="{{ $p->title }}"
+                data-caption="{{ $p->caption }}"
+                data-image="{{ asset('storage/' . $p->image) }}"
+                data-date="{{ $p->date_label }}"
+            >
                 <div class="washi-tape"></div>
-                <div class="polaroid-photo" style="background: {{ $p->theme_color ?? '#ffd6df' }};">
-                    <span style="font-size: 4rem;">{{ $p->sticker ?? '💖' }}</span>
+
+                <div class="polaroid-photo">
+                    <img
+                        src="{{ asset('storage/' . $p->image) }}"
+                        alt="{{ $p->title }}"
+                        class="memory-image"
+                    >
                 </div>
+
                 <div class="polaroid-caption">
                     "{{ $p->caption }}"
                 </div>
+
                 <div class="polaroid-footer">
-                    <span class="polaroid-date">🗓️ {{ $p->date_label }}</span>
-                    <button type="button" class="like-button-badge" data-id="{{ $p->id }}" data-custom-sfx="true">
-                        <span>💖</span> <span class="like-count">{{ $p->likes }}</span>
+                    <span class="polaroid-date">
+                        🗓️ {{ $p->date_label }}
+                    </span>
+
+                    <button
+                        type="button"
+                        class="like-button-badge"
+                        data-id="{{ $p->id }}"
+                        data-custom-sfx="true"
+                    >
+                        <span>💖</span>
+                        <span class="like-count">{{ $p->likes }}</span>
                     </button>
                 </div>
             </div>
@@ -42,8 +66,7 @@
     <div class="sweet-modal-backdrop" id="polaroidLightbox">
         <div class="sweet-modal-box" style="text-align: center;">
             <button class="modal-close-btn" id="btnCloseLightbox">✕</button>
-            <div id="lightboxPhoto" style="width: 110px; height: 110px; border-radius: 50%; background: var(--primary-light); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 3.2rem; box-shadow: 0 8px 20px var(--shadow);">
-                🌸
+            <div id="lightboxPhoto" class="lightbox-photo">
             </div>
             <h3 id="lightboxTitle" style="font-family: var(--font-heading); color: var(--accent); font-size: 1.4rem; margin-bottom: 4px;">
                 Momen Indah
@@ -54,9 +77,6 @@
             <p id="lightboxCaption" style="font-family: var(--font-handwriting); font-size: 1.55rem; color: #4a3b32; line-height: 1.45; margin-bottom: 20px;">
                 Catatan manis kenangan.
             </p>
-            <button type="button" class="btn-sweet-primary" id="btnLightboxCheer">
-                <span>🎉</span> Tepuk Tangan Manis
-            </button>
         </div>
     </div>
 
@@ -65,53 +85,83 @@
         <div class="sweet-modal-box">
             <button class="modal-close-btn" id="btnCloseAddMemory">✕</button>
             <div style="text-align: center; margin-bottom: 14px;">
-                <div style="font-size: 1.8rem; margin-bottom: 2px;">📸</div>
                 <h3 style="font-family: var(--font-heading); color: var(--accent); font-size: 1.35rem;">Abadikan Kenangan</h3>
-                <p style="font-size: 0.82rem; color: var(--text-soft);">Tuliskan momen berharga yang tak akan pernah terlupa!</p>
+                <br>
             </div>
 
-            <form method="POST" action="{{ route('memories.store') }}">
+            <form
+                method="POST"
+                action="{{ route('memories.store') }}"
+                enctype="multipart/form-data"
+            >
                 @csrf
-                <div style="margin-bottom: 10px;">
-                    <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">Judul Kenangan:</label>
-                    <input type="text" name="title" class="wish-input-box" placeholder="Contoh: Pertama Kali Ketemu" required>
-                </div>
 
                 <div style="margin-bottom: 10px;">
-                    <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">Momen / Tanggal:</label>
-                    <input type="text" name="date_label" class="wish-input-box" value="Hari Paling Manis" required>
+                    <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">
+                        Judul Kenangan:
+                    </label>
+
+                    <input
+                        type="text"
+                        name="title"
+                        class="wish-input-box"
+                        placeholder="Contoh: Kerja Kelompok"
+                        required
+                    >
                 </div>
 
                 <div style="margin-bottom: 10px;">
-                    <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">Catatan Kenangan:</label>
-                    <textarea name="caption" class="wish-input-box" rows="3" placeholder="Cerita singkat yang bikin tersenyum..." required></textarea>
+                    <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">
+                        Momen / Tanggal:
+                    </label>
+
+                    <input
+                        type="text"
+                        name="date_label"
+                        class="wish-input-box"
+                        placeholder="..."
+                        required
+                    >
                 </div>
 
-                <div style="margin-bottom: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div>
-                        <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">Pilih Ikon:</label>
-                        <select name="sticker" class="wish-input-box" style="cursor: pointer;">
-                            <option value="🌸">🌸 Bunga</option>
-                            <option value="🍓">🍓 Stroberi</option>
-                            <option value="🧸">🧸 Boneka</option>
-                            <option value="🎂">🎂 Kue</option>
-                            <option value="✨">✨ Bintang</option>
-                            <option value="🐱">🐱 Kucing</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">Warna:</label>
-                        <select name="theme_color" class="wish-input-box" style="cursor: pointer;">
-                            <option value="#ffd6df">Baby Pink</option>
-                            <option value="#ffe5d9">Peach</option>
-                            <option value="#eeddff">Lavender</option>
-                            <option value="#d8f3ec">Mint</option>
-                        </select>
-                    </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">
+                        Catatan Kenangan:
+                    </label>
+
+                    <textarea
+                        name="caption"
+                        class="wish-input-box"
+                        rows="3"
+                        placeholder="Cerita singkat..."
+                        required
+                    ></textarea>
                 </div>
 
-                <button type="submit" class="btn-sweet-primary" style="width: 100%; justify-content: center;">
-                    <span>💖</span> Simpan Kenangan
+                <div style="margin-bottom: 14px;">
+                    <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">
+                        Foto Kenangan:
+                    </label>
+
+                    <input
+                        type="file"
+                        name="image"
+                        class="wish-input-box"
+                        accept="image/jpeg,image/png,image/webp"
+                        required
+                    >
+
+                    <small style="display: block; margin-top: 5px; color: var(--text-soft);">
+                        JPG, PNG, atau WEBP. Maksimal 5 MB.
+                    </small>
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-sweet-primary"
+                    style="width: 100%; justify-content: center;"
+                >
+                    Simpan Kenangan
                 </button>
             </form>
         </div>
@@ -129,18 +179,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const lbTitle = document.getElementById('lightboxTitle');
     const lbDate = document.getElementById('lightboxDate');
     const lbCaption = document.getElementById('lightboxCaption');
-    const btnCheer = document.getElementById('btnLightboxCheer');
 
     document.querySelectorAll('.polaroid-card').forEach(card => {
         card.addEventListener('click', (e) => {
             if (e.target.closest('.like-button-badge')) return;
 
-            lbPhoto.innerHTML = `<span style="font-size: 3.2rem;">${card.dataset.sticker}</span>`;
+            lbPhoto.innerHTML = `
+                <img
+                    src="${card.dataset.image}"
+                    alt="${card.dataset.title}"
+                    class="lightbox-memory-image"
+                >
+            `;
+
             lbTitle.textContent = card.dataset.title;
             lbDate.textContent = `🗓️ ${card.dataset.date}`;
             lbCaption.textContent = `"${card.dataset.caption}"`;
 
-            if (window.sweetSFX) window.sweetSFX.chime();
+            if (window.sweetSFX) {
+                window.sweetSFX.chime();
+            }
+
             lightbox.style.display = 'flex';
         });
     });
@@ -154,13 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === lightbox) lightbox.style.display = 'none';
     });
 
-    btnCheer.addEventListener('click', () => {
-        if (window.sweetSFX) window.sweetSFX.fanfare();
-        if (window.triggerConfetti) {
-            window.triggerConfetti(window.innerWidth / 2, window.innerHeight / 2, 60);
-        }
-        showSweetToast('Tepuk tangan cinta untuk momen ini! 👏💖', '🌸');
-    });
+    
 
     // 2. Like Memory with AJAX
     document.querySelectorAll('.like-button-badge').forEach(btn => {

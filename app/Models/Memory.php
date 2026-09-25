@@ -16,5 +16,6 @@ class Memory extends Model
         'likes',
         'theme_color',
         'sticker',
+        'image',
     ];
 }

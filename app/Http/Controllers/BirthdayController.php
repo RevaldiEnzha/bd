@@ -182,26 +182,31 @@ class BirthdayController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:120',
-            'date_label' => 'nullable|string|max:80',
+            'date_label' => 'required|string|max:80',
             'caption' => 'required|string|max:500',
-            'theme_color' => 'nullable|string|max:30',
-            'sticker' => 'nullable|string|max:20',
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
+
+        $imagePath = $request->file('image')->store('memories', 'public');
 
         $memory = Memory::create([
             'title' => $validated['title'],
-            'date_label' => $validated['date_label'] ?? 'Momen Manis',
+            'date_label' => $validated['date_label'],
             'caption' => $validated['caption'],
-            'theme_color' => $validated['theme_color'] ?? '#ffd6df',
-            'sticker' => $validated['sticker'] ?? '🌸',
-            'likes' => 0
+            'image' => $imagePath,
+            'likes' => 0,
         ]);
 
         if ($request->ajax() || $request->wantsJson()) {
-            return response()->json(['success' => true, 'memory' => $memory]);
+            return response()->json([
+                'success' => true,
+                'memory' => $memory
+            ]);
         }
 
-        return redirect()->route('memories')->with('success', 'Kenangan baru tersimpan! 📸');
+        return redirect()
+            ->route('memories')
+            ->with('success', 'Kenangan baru tersimpan! 📸');
     }
 
     public function likeMemory($id)
