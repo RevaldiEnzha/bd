@@ -7,7 +7,7 @@
             Mini Game
         </div>
         <h1 class="hero-title">Tangkap Kado & Stroberi</h1>
-        <p class="hero-subtitle">Gerakkan keranjang untuk menangkap kue dan stroberi! Kumpulkan 200 poin untuk membuka sertifikat rahasia</p>
+        <p class="hero-subtitle">Gerakin keranjang untuk tangkap kue dan stroberi. Kumpulin 200 poin untuk buka sertifikat rahasia</p>
     </header>
 
     <div class="sweet-card game-arena">
