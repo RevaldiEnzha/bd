@@ -53,9 +53,16 @@
                     Kotak Harapan 
                 </h4>
                 <p style="font-size: 0.82rem; color: var(--text-soft); margin-bottom: 10px;">
-                    Ketik harapan di tahun ini lalu simpan sebelum meniup lilin:
+                    Ketik harapan singkat di tahun ini lalu simpan sebelum meniup lilin:
                 </p>
-                <input type="text" id="secretWishInput" class="wish-input-box" placeholder="Tulis harapan di sini..." maxlength="120">
+                <input
+                    type="text"
+                    id="secretWishInput"
+                    class="wish-input-box"
+                    placeholder="Tulis harapan di sini..."
+                    maxlength="120"
+                    value="{{ $settings['secret_wish'] ?? '' }}"
+                >
                 <button type="button" id="btnSaveWishJar" class="btn-sweet-secondary" style="font-size: 0.88rem; padding: 7px 18px;">
                     Simpan 
                 </button>
@@ -70,7 +77,7 @@
                     <span>💨</span> Tiup Semua Lilin!
                 </button>
                 <button type="button" id="btnCutCake" class="btn-sweet-secondary" style="display: none;">
-                    <span>🍰</span> Potong Kue Manis
+                    <span>🍰</span> Potong Kue
                 </button>
                 <button type="button" id="btnRelight" class="btn-sweet-secondary" style="display: none;">
                     <span>🕯️</span> Nyalakan Lilin Lagi
@@ -116,6 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSaveWish = document.getElementById('btnSaveWishJar');
     const wishInput = document.getElementById('secretWishInput');
     const wishStatus = document.getElementById('wishSavedStatus');
+
+    if (wishInput.value.trim() !== '') {
+        wishInput.readOnly = true;
+        btnSaveWish.disabled = true;
+        btnSaveWish.style.opacity = '0.6';
+        wishStatus.style.display = 'block';
+    }
 
     let blownCount = 0;
 
@@ -191,19 +205,53 @@ document.addEventListener('DOMContentLoaded', () => {
         showSweetToast('Nyam! Kuenya manis loh! 🍰', '🍓');
     });
 
-    btnSaveWish.addEventListener('click', () => {
+    btnSaveWish.addEventListener('click', async () => {
         const val = wishInput.value.trim();
+
         if (!val) {
             showSweetToast('Tulis harapan dulu woii!');
             return;
         }
 
-        if (window.sweetSFX) window.sweetSFX.chime();
-        wishStatus.style.display = 'block';
-        showSweetToast('Harapan rahasiamu berhasil dikunci ke dalam botol! 🫙✨', '🌟');
-        wishInput.disabled = true;
-        btnSaveWish.disabled = true;
-        btnSaveWish.style.opacity = '0.6';
+        try {
+            const response = await fetch('/api/settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    secret_wish: val
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error('Gagal menyimpan harapan');
+            }
+
+            if (window.sweetSFX) window.sweetSFX.chime();
+
+            wishStatus.style.display = 'block';
+
+            showSweetToast(
+                'Harapanmu dikunci'
+            );
+
+            // Harapan sudah tersimpan, jadi tidak boleh diubah lagi
+            wishInput.readOnly = true;
+            btnSaveWish.disabled = true;
+            btnSaveWish.style.opacity = '0.6';
+
+        } catch (error) {
+            console.error(error);
+
+            showSweetToast(
+                'Harapan gagal disimpan. Coba lagi!'
+            );
+        }
     });
 });
 </script>

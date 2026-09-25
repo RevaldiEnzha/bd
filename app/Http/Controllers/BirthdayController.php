@@ -217,7 +217,16 @@ class BirthdayController extends Controller
 
     public function updateSettings(Request $request)
     {
-        $data = $request->only(['name', 'nickname', 'age', 'theme', 'letter_body', 'letter_greeting', 'letter_sender']);
+        $data = $request->only([
+            'name',
+            'nickname',
+            'age',
+            'theme',
+            'letter_body',
+            'letter_greeting',
+            'letter_sender',
+            'secret_wish',
+        ]);
 
         foreach ($data as $key => $val) {
             if ($val !== null) {

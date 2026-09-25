@@ -34,7 +34,7 @@
                     GOKIL! Kado Kebuka!
                 </h2>
                 <p style="font-size: 1rem; color: var(--text); max-width: 520px; margin: 0 auto 18px; line-height: 1.5;">
-                    Hari ini seluruh dunia dan semesta raya merayakan kelahiran seseorang yang keren, yaitu: 
+                    Hari ini semesta raya merayakan kelahiran seseorang yang keren, yaitu: 
                     <strong style="color: var(--accent); font-size: 1.15rem;">{{ $settings['name'] }}</strong>! 
                     
                 </p>
