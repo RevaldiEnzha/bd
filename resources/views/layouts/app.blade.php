@@ -139,44 +139,162 @@
 </div>
 
 <!-- Settings / Customizer Modal -->
+<!-- Settings / Theme Picker Modal -->
 <div class="sweet-modal-backdrop" id="settingsModal">
-    <div class="sweet-modal-box">
+    <div class="sweet-modal-box theme-modal">
+
         <button class="modal-close-btn" id="btnCloseSettings">✕</button>
-        <div style="text-align: center; margin-bottom: 16px;">
-            <div style="font-size: 2rem; margin-bottom: 2px;">🎀</div>
-            <h3 style="font-family: var(--font-heading); color: var(--accent); font-size: 1.35rem;">Personalisasi Manis</h3>
-            <p style="font-size: 0.82rem; color: var(--text-soft);">Sesuaikan nama bidadari & tema warna pastel favorit!</p>
+
+        <div class="theme-header">
+
+            <h3>Warna Suasana</h3>
+
+            <p>
+                Pilih tema warna yang paling disuka
+            </p>
         </div>
+        <br>
 
         <form id="settingsForm">
-            <div style="margin-bottom: 12px;">
-                <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">Nama Lengkap / Spesial:</label>
-                <input type="text" name="name" class="wish-input-box" value="{{ $settings['name'] ?? '' }}" required>
+
+            <div class="theme-grid">
+
+                <!-- Strawberry -->
+                <label
+                    class="theme-option theme-strawberry
+                    {{ ($settings['theme'] ?? 'strawberry') === 'strawberry' ? 'selected' : '' }}"
+                    data-theme="strawberry"
+                >
+                    <input
+                        type="radio"
+                        name="theme"
+                        value="strawberry"
+                        {{ ($settings['theme'] ?? 'strawberry') === 'strawberry' ? 'checked' : '' }}
+                    >
+
+                    <div class="theme-preview">
+                        <span>🍓</span>
+
+                        <div class="theme-preview-dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="theme-info">
+                        <strong>Strawberry</strong>
+                    </div>
+
+                    <div class="theme-check">✓</div>
+                </label>
+
+
+                <!-- Peach -->
+                <label
+                    class="theme-option theme-peach
+                    {{ ($settings['theme'] ?? '') === 'peach' ? 'selected' : '' }}"
+                    data-theme="peach"
+                >
+                    <input
+                        type="radio"
+                        name="theme"
+                        value="peach"
+                        {{ ($settings['theme'] ?? '') === 'peach' ? 'checked' : '' }}
+                    >
+
+                    <div class="theme-preview">
+                        <span>🍑</span>
+
+                        <div class="theme-preview-dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="theme-info">
+                        <strong>Peach</strong>
+                    </div>
+
+                    <div class="theme-check">✓</div>
+                </label>
+
+
+                <!-- Lavender -->
+                <label
+                    class="theme-option theme-lavender
+                    {{ ($settings['theme'] ?? '') === 'lavender' ? 'selected' : '' }}"
+                    data-theme="lavender"
+                >
+                    <input
+                        type="radio"
+                        name="theme"
+                        value="lavender"
+                        {{ ($settings['theme'] ?? '') === 'lavender' ? 'checked' : '' }}
+                    >
+
+                    <div class="theme-preview">
+                        <span>💜</span>
+
+                        <div class="theme-preview-dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="theme-info">
+                        <strong>Lavender</strong>
+                    </div>
+
+                    <div class="theme-check">✓</div>
+                </label>
+
+
+                <!-- Mint -->
+                <label
+                    class="theme-option theme-mint
+                    {{ ($settings['theme'] ?? '') === 'mint' ? 'selected' : '' }}"
+                    data-theme="mint"
+                >
+                    <input
+                        type="radio"
+                        name="theme"
+                        value="mint"
+                        {{ ($settings['theme'] ?? '') === 'mint' ? 'checked' : '' }}
+                    >
+
+                    <div class="theme-preview">
+                        <span>🍃</span>
+
+                        <div class="theme-preview-dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="theme-info">
+                        <strong>Mint</strong>
+                    </div>
+
+                    <div class="theme-check">✓</div>
+                </label>
+
             </div>
 
-            <div style="margin-bottom: 12px;">
-                <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">Nama Panggilan (Singkat):</label>
-                <input type="text" name="nickname" class="wish-input-box" value="{{ $settings['nickname'] ?? '' }}" required>
-            </div>
-
-            <div style="margin-bottom: 12px;">
-                <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">Ulang Tahun ke- :</label>
-                <input type="number" name="age" class="wish-input-box" value="{{ (int)($settings['age'] ?? 21) }}" min="1" max="120" required>
-            </div>
-
-            <div style="margin-bottom: 16px;">
-                <label style="font-weight: 700; font-size: 0.82rem; display: block; margin-bottom: 4px;">Tema Warna Pastel:</label>
-                <select name="theme" class="wish-input-box" style="cursor: pointer;">
-                    <option value="strawberry" {{ ($settings['theme'] ?? '') === 'strawberry' ? 'selected' : '' }}>🍓 Strawberry Milkshake (Pink Manis)</option>
-                    <option value="peach" {{ ($settings['theme'] ?? '') === 'peach' ? 'selected' : '' }}>🍑 Peach Blossom (Hangat & Ceria)</option>
-                    <option value="lavender" {{ ($settings['theme'] ?? '') === 'lavender' ? 'selected' : '' }}>💜 Dreamy Lavender (Aesthetic Magis)</option>
-                    <option value="mint" {{ ($settings['theme'] ?? '') === 'mint' ? 'selected' : '' }}>🍃 Mint Vanilla (Segar & Lembut)</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn-sweet-primary" style="width: 100%; justify-content: center;">
-                Simpan Perubahan
+            <button
+                type="submit"
+                class="btn-sweet-primary theme-save-btn"
+            >
+                Terapkan Tema
             </button>
+
         </form>
     </div>
 </div>
