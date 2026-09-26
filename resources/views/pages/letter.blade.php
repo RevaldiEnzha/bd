@@ -7,7 +7,7 @@
             Pesan 
         </div>
         <h1 class="hero-title">Surat Spesial Buat "Naufa Aulia"</h1>
-        <p class="hero-subtitle">Ada amplop surat yang nunggu dibuka nih...</p>
+        <p class="hero-subtitle">Ada surat nih...</p>
     </header>
 
     <div class="sweet-card" style="text-align: center;">

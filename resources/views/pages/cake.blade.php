@@ -89,10 +89,10 @@
             <div id="celebrationBanner" style="display: none; margin-top: 20px; animation: jellyBounce 0.5s ease;">
                 <div style="font-size: 2.2rem; margin-bottom: 4px;">🥳🎉</div>
                 <h3 style="font-family: var(--font-heading); color: var(--accent); font-size: 1.45rem; margin-bottom: 6px;">
-                    MANTAPP! LILIN PADAM!
+                    YEYYY! LILIN PADAM!
                 </h3>
                 <p style="font-size: 0.95rem; color: var(--text); max-width: 480px; margin: 0 auto; line-height: 1.5;">
-                    Semua doa dan harapan indah Naufa telah didengar dan diaminkan semesta!
+                    Semua doa dan harapan LingLung didengar dan diaminkan semesta!
                 </p>
             </div>
 
