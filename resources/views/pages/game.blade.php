@@ -70,10 +70,11 @@
                     <strong style="font-family: var(--font-handwriting); font-size: 1.3rem; color: var(--accent);">Revaldi</strong>
                 </div>
             </div>
+            <br>
 
             <div style="margin-top: 18px;">
-                <button type="button" class="btn-sweet-primary" onclick="window.print()">
-                    <span>🖨️</span> Cetak / Simpan Sertifikat
+                <button type="button" class="btn-sweet-primary" id="btnDownloadCertificate">
+                    Download Sertifikat
                 </button>
             </div>
         </div>
@@ -82,6 +83,8 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gameCanvas');
@@ -92,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const certBox = document.getElementById('certificateBox');
     const btnTouchLeft = document.getElementById('btnTouchLeft');
     const btnTouchRight = document.getElementById('btnTouchRight');
+    const btnDownloadCertificate = document.getElementById('btnDownloadCertificate');
 
     let score = 0;
     let lives = 3;
@@ -280,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             certBox.style.display = 'block';
             certBox.scrollIntoView({ behavior: 'smooth' });
-            showSweetToast('GOKIL 200 poin! Sertifikat terbuka! 🏆🎉', '👑');
+            showSweetToast('GOKIL 200 poin! Sertifikat terbuka!');
         } else {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -293,6 +297,147 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fillText('Sentuh "Main Lagi" untuk mencoba kembali!', canvas.width / 2, canvas.height / 2 + 20);
         }
     }
+
+    btnDownloadCertificate.addEventListener('click', async () => {
+        if (!window.html2canvas || !window.jspdf) {
+            showSweetToast(
+                'Coba lagi sebentar.'
+            );
+            return;
+        }
+
+        let tempWrapper = null;
+
+        try {
+            if (window.sweetSFX) {
+                window.sweetSFX.chime();
+            }
+
+            const { jsPDF } = window.jspdf;
+
+            // ==========================================
+            // 1. Clone sertifikat
+            // ==========================================
+            const clone = certBox.cloneNode(true);
+
+            // Hilangkan ID agar tidak ada duplicate ID
+            clone.removeAttribute('id');
+
+            // Hapus tombol download dari PDF
+            const cloneButton = clone.querySelector('#btnDownloadCertificate');
+
+            if (cloneButton) {
+                cloneButton.parentElement.remove();
+            }
+
+            // ==========================================
+            // 2. Paksa tampilan clone untuk PDF
+            // ==========================================
+            clone.style.display = 'block';
+            clone.style.width = '540px';
+            clone.style.maxWidth = '540px';
+            clone.style.margin = '0';
+            
+            // PENTING:
+            // Matikan animasi jellyBounce agar html2canvas
+            // tidak mengambil screenshot ketika opacity sedang berubah.
+            clone.style.animation = 'none';
+            clone.style.transform = 'none';
+            clone.style.opacity = '1';
+
+            // Pastikan background solid
+            clone.style.backgroundColor = '#fffdf8';
+
+            // ==========================================
+            // 3. Container sementara
+            // ==========================================
+            tempWrapper = document.createElement('div');
+
+            tempWrapper.style.position = 'fixed';
+            tempWrapper.style.left = '-10000px';
+            tempWrapper.style.top = '0';
+            tempWrapper.style.width = '540px';
+            tempWrapper.style.padding = '0';
+            tempWrapper.style.margin = '0';
+            tempWrapper.style.background = '#fffdf8';
+            tempWrapper.style.zIndex = '-9999';
+
+            tempWrapper.appendChild(clone);
+            document.body.appendChild(tempWrapper);
+
+            // ==========================================
+            // 4. Render dengan resolusi tinggi
+            // ==========================================
+            const canvas = await html2canvas(clone, {
+                scale: 4,
+                useCORS: true,
+                backgroundColor: '#fffdf8',
+                logging: false,
+                imageTimeout: 0
+            });
+
+            // ==========================================
+            // 5. Buat PDF A4 Landscape
+            // ==========================================
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+
+            const maxPdfWidth = pageWidth - 40;
+            const maxPdfHeight = pageHeight - 30;
+
+            const imageRatio = canvas.width / canvas.height;
+
+            let imageWidth = maxPdfWidth;
+            let imageHeight = imageWidth / imageRatio;
+
+            if (imageHeight > maxPdfHeight) {
+                imageHeight = maxPdfHeight;
+                imageWidth = imageHeight * imageRatio;
+            }
+
+            const x = (pageWidth - imageWidth) / 2;
+            const y = (pageHeight - imageHeight) / 2;
+
+            pdf.addImage(
+                canvas.toDataURL('image/png', 1.0),
+                'PNG',
+                x,
+                y,
+                imageWidth,
+                imageHeight,
+                undefined,
+                'FAST'
+            );
+
+            // ==========================================
+            // 7. Download
+            // ==========================================
+            pdf.save('sertifikat-orang-paling-keren.pdf');
+
+            showSweetToast(
+                'Sertifikat di-download!'
+            );
+
+        } catch (error) {
+            console.error('Gagal membuat sertifikat PDF:', error);
+
+            showSweetToast(
+                'Gagal 😿'
+            );
+
+        } finally {
+            // Selalu bersihkan container sementara
+            if (tempWrapper && tempWrapper.parentNode) {
+                tempWrapper.parentNode.removeChild(tempWrapper);
+            }
+        }
+    });
 
     resetGame();
 });
