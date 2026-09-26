@@ -7,6 +7,7 @@
             Ritual Ulang Tahun <span>🎂</span>
         </div>
         <h1 class="hero-title">Kue Ulang Tahun & Tiup Lilin</h1>
+        <p class="hero-subtitle">Pencet api buat meniup lilin.</p>
         <p class="hero-subtitle">Sebelum tiup lilin, jangan lupa tulis harapan terus pejamkan mata!</p>
     </header>
 
