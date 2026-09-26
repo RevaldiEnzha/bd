@@ -130,11 +130,9 @@
 
 <!-- Floating Controls (Confetti & Sound) -->
 <div class="sweet-floating-controls">
-    <button class="control-pill" id="btnBurstConfetti" title="Taburkan Konfeti!" data-custom-sfx="true">
-        <span>🎉</span> Konfeti
-    </button>
     <button class="control-pill" id="btnToggleAudio" title="Suara ON/OFF" data-custom-sfx="true">
-        <span id="audioIcon">🔊</span> <span id="audioStatusText">ON</span>
+        <span id="audioIcon">🔊</span>
+        <span id="audioStatusText">ON</span>
     </button>
 </div>
 

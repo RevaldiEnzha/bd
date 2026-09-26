@@ -5,7 +5,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     initSettingsModal();
     initAudioControls();
-    initGlobalConfettiButton();
 });
 
 function getCsrfToken() {
@@ -144,8 +143,7 @@ function initSettingsModal() {
                     }
 
                     showSweetToast(
-                        'Tema berhasil diterapkan! 🎨✨',
-                        '💖'
+                        'Tema dipasang! ',
                     );
 
 
@@ -255,29 +253,3 @@ function initAudioControls() {
 /* ============================================================
    GLOBAL CONFETTI BUTTON
    ============================================================ */
-
-function initGlobalConfettiButton() {
-    const btn =
-        document.getElementById('btnBurstConfetti');
-
-    if (!btn) return;
-
-    btn.addEventListener('click', () => {
-
-        const rect =
-            btn.getBoundingClientRect();
-
-        if (window.triggerConfetti) {
-            window.triggerConfetti(
-                rect.left + rect.width / 2,
-                rect.top,
-                70
-            );
-        }
-
-        showSweetToast(
-            'Yay! Hujan konfeti manis! 🎉',
-            '💖'
-        );
-    });
-}
